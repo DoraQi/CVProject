@@ -1,0 +1,9 @@
+transformedImages
+train
+trainingData
+CV*
+*.pdf
+*.zip
+data
+*Zone.Identifier
+*.png

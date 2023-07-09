@@ -1,0 +1,8 @@
+MAX_IMG_WIDTH = 200
+DISPLAY_WINDOW_NAME = "labeled image"
+
+LABEL_DIRECTORY = "labeledData"
+COMPRESS_DIRECTORY = "compressed"
+TRAINING_DATA_DIRECTORY = "trainingData"
+LABELED_IMAGES_DIRECTORY = "transformedImages"
+OVERLAP_THREASHOLD = 1
