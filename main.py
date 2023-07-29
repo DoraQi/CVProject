@@ -11,6 +11,5 @@ if __name__ == "__main__":
         shutil.rmtree(constants.LABEL_DIRECTORY)
     else:
         if len(sys.argv) > 1 and sys.argv[1] == "1":
-            # imageCompression.compressImages(constants.TRAINING_DATA_DIRECTORY)
-            imageCompression.compressImages("smol")
+            imageCompression.compressImages(constants.TRAINING_DATA_DIRECTORY)
         circleRecognition.findCircles()

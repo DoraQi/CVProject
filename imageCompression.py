@@ -23,18 +23,19 @@ def compressImage(image_file, original_file):
 
     # Resizing the original image
     image = image.resize((constants.MAX_IMG_WIDTH, round(newheight)))
+    # image = image.convert("L")
 
     enhancer = ImageEnhance.Contrast(image)
 
-    factor = 1.5  # gives original image
+    factor = 1.6
     image = enhancer.enhance(factor)
 
     # Saving the image
     filename = (
         constants.COMPRESS_DIRECTORY
-        + "/compressed"
-        + original_file.split(".")[0]
-        + ".jpg"
+        # + "/compressed"
+        + "/"
+        + original_file
     )
     image.save(filename, optimize=True, quality=85)
     return

@@ -8,21 +8,21 @@ import constants
 
 # https://docs.opencv.org/3.4/d4/d70/tutorial_hough_circle.html
 def makeCircles(src):
+    # gray = cv.medianBlur(src, 17)
     gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
 
     col = gray.shape[1]
-
-    gray = cv.medianBlur(gray, col // 26 * 2 + 1)
+    gray = cv.GaussianBlur(gray, (5, 5), 1.5)
 
     circles = cv.HoughCircles(
         gray,
         cv.HOUGH_GRADIENT,
-        1.13,
-        col / 30,
+        1.2,
+        col // 18,
         param1=100,
-        param2=30,
-        minRadius=5,
-        maxRadius=0,
+        param2=50,
+        minRadius=col // 50,
+        maxRadius=col // 5,
     )
 
     return None if circles is None else circles[0, :]
@@ -32,6 +32,7 @@ def findPointsOnCircle(x, y, rad, n, maxX, maxY):
     t = 0
     result = []
     step = math.pi * 2 / n
+    rad *= 1.1
 
     while t < math.pi * 2:
         dx = math.cos(t) * rad
@@ -48,6 +49,7 @@ def findPointsOnCircle(x, y, rad, n, maxX, maxY):
 
 def openFile(filename, directory):
     f = os.path.join(directory, filename)
+    src = None
     if os.path.isfile(f):
         src = cv.imread(cv.samples.findFile(f), cv.IMREAD_COLOR)
     if src is None:
@@ -66,8 +68,9 @@ def labelCircle(img):
     key = cv.waitKey(0)
     label = -1
     while key != 13:
-        label = key - 48
-        print("Selected: %d" % (label))
+        classes = [1, 10, 100, 5, 50, 500]
+        label = classes[key - 48]
+        print("Selected: %s" % (label))
         print("Press <enter> to finalize")
         key = cv.waitKey(0)
         print()
@@ -86,9 +89,10 @@ def cleanCircles(circles):
             dx = int(other[0]) - current[0]
             dy = int(other[1]) - current[1]
             distance = pow(dx, 2) + pow(dy, 2)
-            if (
-                distance
-                < pow(max(other[2], current[2]), 2) * constants.OVERLAP_THREASHOLD
+            if distance < pow(
+                max(other[2], current[2]), 2
+            ) * constants.OVERLAP_THREASHOLD and other[2] in range(
+                int(current[2] * 0.7), int(current[2] * 1.3)
             ):
                 if current[2] < other[2]:
                     circles = np.delete(circles, i, 0)
@@ -110,10 +114,13 @@ def findCircles():
 
     directory = constants.COMPRESS_DIRECTORY
     for filename in os.listdir(directory):
+        # original = openFile(filename, constants.TRAINING_DATA_DIRECTORY)
+        # cv.imshow("original", original)
+        # cv.waitKey(0)
         src = openFile(filename, directory)
         final = src.copy()
 
-        rows = src.shape[0]
+        rows = src.shape[1]
         cols = src.shape[0]
 
         circles = makeCircles(src)
@@ -121,7 +128,7 @@ def findCircles():
             continue
 
         circles = np.uint16(np.around(circles))
-        circles = cleanCircles(circles)
+        # circles = cleanCircles(circles)
 
         imageLabel = []
         for i in circles:
@@ -146,7 +153,7 @@ def findCircles():
                     str(label)
                     + " "
                     + " ".join(
-                        [str(p[0] / cols) + " " + str(p[1] / rows) for p in points]
+                        [str(p[0] / rows) + " " + str(p[1] / cols) for p in points]
                     )
                 )
 

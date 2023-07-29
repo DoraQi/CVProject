@@ -7,3 +7,6 @@ CV*
 data
 *Zone.Identifier
 *.png
+__pycache__
+labeled*
+content
