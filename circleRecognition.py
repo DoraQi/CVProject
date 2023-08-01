@@ -62,7 +62,7 @@ def openFile(filename, directory):
 def labelCircle(img):
     cv.imshow(constants.DISPLAY_WINDOW_NAME, img)
     print(
-        "Classify image: [0='1', 1='10', 2='100', 3='5', 4='50', 5='500', skip=<enter>]"
+        "Classify image: [0='1', 1='10', 2='100', 3='5', 4='50', 5='500', enter=<skip>]"
     )
     # c = int(input())
     key = cv.waitKey(0)
